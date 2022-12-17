@@ -1,6 +1,6 @@
-#include <iostream>
+#include <windows.h>
 
-int main()
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
 {
-	std::cout << "Hello worl!" << std::endl;
+    return MessageBox(NULL, L"hello, world", L"caption", 0);
 }
