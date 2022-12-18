@@ -29,3 +29,8 @@ Window::~Window()
 {
     DestroyWindow(this->m_hwnd);
 }
+
+HWND Window::getHWND()
+{
+    return this->m_hwnd;
+}

@@ -4,6 +4,7 @@ class Window
 {
 public:
 	Window(HINSTANCE hInstance, int nCmdShow, WNDPROC WndProc);
+	HWND getHWND();
 	~Window();
 private:
 	UINT width;

@@ -1,1 +1,1 @@
-add_library(Core Window.cpp)
+add_library(Core Window.cpp GPUManager.cpp)

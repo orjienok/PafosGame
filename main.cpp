@@ -1,4 +1,7 @@
 #include "Core/Window.h";
+#include "Core/GPUManager.h"
+#include "imgui/imgui.h"
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -7,6 +10,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     Window myWindow = Window(hInstance, nCmdShow, WndProc);
+    GPUManager myGPUManager = GPUManager(myWindow.getHWND());
 
     // Main message loop
     MSG msg = { 0 };
