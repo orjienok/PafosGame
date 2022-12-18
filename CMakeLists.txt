@@ -12,16 +12,18 @@ add_subdirectory(imgui)
 find_library(direct11 d3d11.lib PATHS "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Lib\\x64")
 
 if(${direct11} STREQUAL direct11-NOTFOUND)
-    message(FATAL_ERROR "not finding d3d11.lib")
+    message(FATAL_ERROR "not found d3d11.lib")
 else()
     message(STATUS "d3d11 found as ${direct11}")
 endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC Core)
 target_include_directories(${PROJECT_NAME} PUBLIC imgui)
+target_include_directories(${PROJECT_NAME} PUBLIC Core)
+
 
 target_link_directories(${PROJECT_NAME} PRIVATE Core)
 target_link_directories(${PROJECT_NAME} PRIVATE imgui)
 
 target_link_libraries(${PROJECT_NAME} Core)
 target_link_libraries(${PROJECT_NAME} ${direct11})
+target_link_libraries(${PROJECT_NAME} imgui)
