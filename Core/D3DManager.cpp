@@ -1,18 +1,19 @@
-#include "GPUManager.h"
+#include "D3DManager.h"
+#include <iostream>
 
-GPUManager::GPUManager(HWND hWnd)
+D3DManager::D3DManager(HWND hWnd)
 {
 	InitD3D(hWnd);
 }
 
-GPUManager::~GPUManager()
+D3DManager::~D3DManager()
 {
     this->dev->Release();
     this->devcon->Release();
     this->swapchain->Release();
 }
 
-void GPUManager::InitD3D(HWND hWnd)
+void D3DManager::InitD3D(HWND hWnd)
 {
     DXGI_SWAP_CHAIN_DESC scd;
 
@@ -29,17 +30,45 @@ void GPUManager::InitD3D(HWND hWnd)
 
     // create a device, device context and swap chain using the information in the scd struct
     D3D11CreateDeviceAndSwapChain(NULL,D3D_DRIVER_TYPE_HARDWARE,NULL,NULL,NULL,NULL,D3D11_SDK_VERSION,&scd,&swapchain,&dev,NULL,&devcon);
+
+    this->dev->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDXGIDevice);
+    pDXGIDevice->GetAdapter(&pDXGIAdapter);
 }
 
-ID3D11Device* GPUManager::getDevice()
+ID3D11Device* D3DManager::getDevice()
 {
     return this->dev;
 }
-ID3D11DeviceContext* GPUManager::getDeviceContext()
+ID3D11DeviceContext* D3DManager::getDeviceContext()
 {
     return this->devcon;
 }
-IDXGISwapChain* GPUManager::getDeviceSwapchain()
+IDXGISwapChain* D3DManager::getDeviceSwapchain()
 {
     return this->swapchain;
+}
+
+void D3DManager::getDeviceName()
+{
+    DXGI_ADAPTER_DESC desc;
+    this->pDXGIAdapter->GetDesc(&desc);
+
+    const wchar_t* wcsIndirectString = desc.Description;
+    char mychars[128] ;
+
+    size_t          countConverted;
+    errno_t         err;
+    mbstate_t       mbstate;
+
+    err = wcsrtombs_s(&countConverted, mychars, 128,
+        &wcsIndirectString, 128, &mbstate);
+
+    if (err == EILSEQ)
+    {
+        printf("An encoding error was detected in the string.\n");
+    }
+    else
+    {
+        std::cout << mychars << std::endl;
+    }
 }

@@ -1,0 +1,7 @@
+class GameCore
+{
+public:
+	
+private:
+
+};
