@@ -1,1 +1,0 @@
-add_library(imgui imgui.cpp imgui_demo.cpp imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp ./backends/imgui_impl_win32.cpp ./backends/imgui_impl_dx11.cpp)

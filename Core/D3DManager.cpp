@@ -1,9 +1,9 @@
 #include "D3DManager.h"
 #include <iostream>
 
-D3DManager::D3DManager(HWND hWnd)
+D3DManager::D3DManager(Window& window)
 {
-	InitD3D(hWnd);
+	InitD3D(window);
 }
 
 D3DManager::~D3DManager()
@@ -13,7 +13,7 @@ D3DManager::~D3DManager()
     this->swapchain->Release();
 }
 
-void D3DManager::InitD3D(HWND hWnd)
+void D3DManager::InitD3D(Window& window)
 {
     DXGI_SWAP_CHAIN_DESC scd;
 
@@ -22,17 +22,28 @@ void D3DManager::InitD3D(HWND hWnd)
 
     // fill the swap chain description struct
     scd.BufferCount = 1;                                    // one back buffer
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
+    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scd.BufferDesc.Width = window.getClientWidth();
+    scd.BufferDesc.Height = window.getClientHeight();
+    scd.BufferDesc.RefreshRate.Numerator = 60;
+    scd.BufferDesc.RefreshRate.Denominator = 1;
     scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-    scd.OutputWindow = hWnd;                                // the window to be used
+    scd.OutputWindow = window.getHWND();                                // the window to be used
     scd.SampleDesc.Count = 4;                               // how many multisamples
     scd.Windowed = TRUE;                                    // windowed/full-screen mode
 
     // create a device, device context and swap chain using the information in the scd struct
-    D3D11CreateDeviceAndSwapChain(NULL,D3D_DRIVER_TYPE_HARDWARE,NULL,NULL,NULL,NULL,D3D11_SDK_VERSION,&scd,&swapchain,&dev,NULL,&devcon);
+    D3D11CreateDeviceAndSwapChain(NULL,D3D_DRIVER_TYPE_HARDWARE,NULL,D3D11_CREATE_DEVICE_DEBUG,NULL,NULL,D3D11_SDK_VERSION,&scd,&swapchain,&dev,NULL,&devcon);
 
     this->dev->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDXGIDevice);
     pDXGIDevice->GetAdapter(&pDXGIAdapter);
+
+    ID3D11Texture2D* pBackBuffer;
+    swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+
+    // use the back buffer address to create the render target
+    dev->CreateRenderTargetView(pBackBuffer, NULL, &m_renderTarget);
+    pBackBuffer->Release();
 }
 
 ID3D11Device* D3DManager::getDevice()
@@ -71,4 +82,9 @@ void D3DManager::getDeviceName()
     {
         std::cout << mychars << std::endl;
     }
+}
+
+ID3D11RenderTargetView* D3DManager::getRenderTarget()
+{
+    return this->m_renderTarget;
 }

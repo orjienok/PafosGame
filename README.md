@@ -1,5 +1,5 @@
 # PafosGame
-![hippo](https://i.ibb.co/NNz58CT/Pafos-Game.png)
+![hippo](https://postimg.cc/jCs10B65)
 
 Basic PC game software based on DirectX 11
 # How to build
